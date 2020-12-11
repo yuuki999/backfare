@@ -21,6 +21,22 @@ MarkDown記法: https://qiita.com/tbpgr/items/989c6badefff69377da7
 `rake db:create`<br>
 `rake db:migrate`<br>
 
+### ローカル環境でLine APIを試す
+
+1) ngrokでコマンドで外部に公開するURLを生成できる(ngrokをローカルにインストールしている前提)<br>
+`ngrok http <docker ip>:3000`
+
+2) jqを公式サイトからDLし、環境に応じてセットアップする<br>
+https://stedolan.github.io/jq/<br>
+
+3) jqコマンドでngrokのipを取得する<br>
+`curl -s localhost:4040/api/tunnels | jq-win64.exe -r ".tunnels[].public_url"`
+
+### 補足
+
+環境変数は.envファイルで設定する。
+注意点として、.envに「#コメント」などを記述すると、環境変数が読み込めなくなるので注意。
+
 
 ### 注意点
 
