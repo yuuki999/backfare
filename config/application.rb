@@ -31,6 +31,6 @@ module RailsBase
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-    config.hosts << "ca0cfe3b9816.ngrok.io"
+    # config.hosts << "<ngrok ip>"
   end
 end
