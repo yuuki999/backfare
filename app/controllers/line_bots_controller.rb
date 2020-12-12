@@ -11,17 +11,25 @@ class LineBotsController < ApplicationController
     }
 
     # 受信したtypeで処理の切り分け
+    # 返信する
     events = client.parse_events_from(body)
     events.each do |event|
       case event
         when Line::Bot::Event::Message
           case event.type
           when Line::Bot::Event::MessageType::Text
+            # 返信するメッセージ
             message = {
               type: 'text',
-              text: event.message['text']
+              text: '交通費を受理しました。'
             }
             client.reply_message(event['replyToken'], message)
+
+            # 受信したメッセージをDBに保存する
+            line_bot = LineBot.new
+            line_bot.received_message = event['message']['text']
+            line_bot.save
+
           when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
             response = client.get_message_content(event.message['id'])
             tf = Tempfile.open("content")
@@ -29,6 +37,7 @@ class LineBotsController < ApplicationController
           end
       end
     end
+
 
     logger.debug("body: #{body}")
     logger.debug("events: #{events}")
