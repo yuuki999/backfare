@@ -37,6 +37,24 @@ https://stedolan.github.io/jq/<br>
 環境変数は.envファイルで設定する。
 注意点として、.envに「#コメント」などを記述すると、環境変数が読み込めなくなるので注意。
 
+### 便利コマンド
+
+#### dokcer
+
+webコンテナに入る<br>
+`docker-compose exec web bash`
+
+#### migration
+
+migrationファイルを作成する。<br>
+`rails g migration AddDetailsTo<テーブル名> <カラム名>:<型> <カラム名>:<型> ... `<br>
+`例) rails g migration AddDetailsToLineBots message_sender:string received_message:string`
+
+#### mysql
+
+rootユーザーでログイン<br>
+`mysql -u root -p`
+
 
 ### 注意点
 
