@@ -1,0 +1,2 @@
+class LineUsersController < ApplicationController
+end
