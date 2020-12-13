@@ -37,6 +37,14 @@ https://stedolan.github.io/jq/<br>
 環境変数は.envファイルで設定する。
 注意点として、.envに「#コメント」などを記述すると、環境変数が読み込めなくなるので注意。
 
+migrationファイルの運用<br>
+参考URL<br>
+https://qiita.com/newburu/items/820ae5eba1a88e87d271
+
+db/migrate/「対象のmigration_file」 を直接編集する。<br>
+その後、下記コマンドで更新（データは消える）<br>
+`rake db:migrate:reset`
+
 ### 便利コマンド
 
 #### dokcer
@@ -58,6 +66,9 @@ rootユーザーでログイン<br>
 
 ### 注意点
 
-Windows環境だと改行設定でdocker-compose webコンテナが立ち上がらない可能性がある。<br>
+・Windows環境だと改行設定でdocker-compose webコンテナが立ち上がらない可能性がある。<br>
 下記記事を参考に設定を見直すことをおススメします。<br>
 https://qiita.com/okazy/items/8ce003fbb54e798b4af7
+
+・ngrokは長時間起動していると、URLが無効になる。
+
