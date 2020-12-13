@@ -1,0 +1,2 @@
+class SettlementManagementsController < ApplicationController
+end

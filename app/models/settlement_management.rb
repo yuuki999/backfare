@@ -1,0 +1,2 @@
+class SettlementManagement < ApplicationRecord
+end
