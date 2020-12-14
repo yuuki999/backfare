@@ -63,6 +63,11 @@ migrationファイルを作成する。<br>
 rootユーザーでログイン<br>
 `mysql -u root -p`
 
+### 設計
+
+モデルにビジネスロジック、ファットコントローラーにしない。
+https://pikawaka.com/rails/mvc
+
 
 ### 注意点
 
