@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_13_134010) do
+ActiveRecord::Schema.define(version: 2021_02_24_082305) do
 
   create_table "line_bots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -40,4 +40,13 @@ ActiveRecord::Schema.define(version: 2020_12_13_134010) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "tmp_transportation_expenses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "fee"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "line_users_id"
+    t.index ["line_users_id"], name: "index_tmp_transportation_expenses_on_line_users_id"
+  end
+
+  add_foreign_key "tmp_transportation_expenses", "line_users", column: "line_users_id"
 end
