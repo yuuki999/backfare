@@ -11,25 +11,22 @@ class LineBotsController < ApplicationController
     # line botアクセストークン情報
     config = Config.new
     client = config.line_bot_access_auth
-
     logger.debug("body: #{body}")
 
     # webhockから送信される情報
-    events = client.parse_events_from(body)
-
+    # TODO: 切り出す
+    # events = client.parse_events_from(body)
+    events = get_webhock_events(client, body)
     logger.debug("events: #{events}")
 
     # メッセージ送信者のIDを取得する
     # TODO ビジネスロジックなので切り分けるべきでは？
-    contact = ''
-    response = client.get_profile(events[0]['source']['userId'])
+    # response = client.get_profile(events[0]['source']['userId'])
+    response = get_line_user_profile(client, events)
     logger.debug("response: #{response}")
 
     # TODO レスポンスチェックをする。
-    line_user = LineUser.new
-    # JSONに変換するコードはモデルに書くべきか？
-    # コントローラーに書くべき、理由は、仮にモデルにJSON変換メソッドを定義しなくても、1行で変換コードは読み出せ完結するので、冗長になる。
-    # 2行以上であればメソッドに切り出す価値はありそうだが、そうではないので切り出すべきではないだろう。
+    # line_user = LineUser.new
     contact = JSON.parse(response.body)
     logger.debug("contact: #{contact}")
 
@@ -39,6 +36,8 @@ class LineBotsController < ApplicationController
     # ではモデルでLineUser.exists?みたいな処理はどう書けるのか？
     # self.exists?のようには書けないので、LineUserモデル内でLineUser.exists?のように書くしかないか。
     unless LineUser.exists?(user_id: contact['userId'])
+      line_user = LineUser.new
+      
       ActiveRecord::Base.transaction do
         line_user.display_name = contact['displayName']
         line_user.user_id = contact['userId']
@@ -153,5 +152,14 @@ class LineBotsController < ApplicationController
 
 
     return 'OK'
+  end
+
+  private
+  def get_webhock_events(client, body)
+    events = client.parse_events_from(body)
+  end
+
+  def get_line_user_profile(client, events)
+    response = client.get_profile(events[0]['source']['userId'])
   end
 end
