@@ -5,9 +5,6 @@ class LineBotsController < ApplicationController
     # Webhockからリクエストを受信する
     body = request.body.read
 
-    logger.debug("ENV['CHANNEL_SECRET']: #{ENV['CHANNEL_SECRET']}")
-    logger.debug("ENV['CHANNEL_TOKEN']: #{ENV['CHANNEL_TOKEN']}")
-
     # line botアクセストークン情報
     config = Config.new
     client = config.line_bot_access_auth
@@ -31,35 +28,14 @@ class LineBotsController < ApplicationController
     logger.debug("contact: #{contact}")
 
     # 同じ送信者を保存しない
-    # TODO
-    # ここの判定処理はビジネスロジックっぽいのでモデルに書き出すべき？
-    # ではモデルでLineUser.exists?みたいな処理はどう書けるのか？
-    # self.exists?のようには書けないので、LineUserモデル内でLineUser.exists?のように書くしかないか。
-    unless LineUser.exists?(user_id: contact['userId'])
-      line_user = LineUser.new
-      
-      ActiveRecord::Base.transaction do
-        line_user.display_name = contact['displayName']
-        line_user.user_id = contact['userId']
-        line_user.language = contact['language']
-        line_user.picture_url = contact['pictureUrl']
-        line_user.status_message = contact['statusMessage']
-        line_user.save
-
-        line_bot = LineBot.new
-        line_bot.message_sender = contact['userId']
-        line_bot.save
-
-        logger.debug("送信者情報の保存")
-      end
+    unless line_user_exist?(contact)
+      line_user_registration(contact)
     else
       # 既にline user登録済み
       logger.debug("送信者情報保存済み")
     end
 
-    # メッセージを受け取る
-    # TODO
-    # 
+    # TODO ループ内に長い処理を切り出したい。
     events.each do |event|
       # 確認テンプレート表示中か判断
       # TODO: モデルに切り分け
@@ -155,11 +131,40 @@ class LineBotsController < ApplicationController
   end
 
   private
+  # webhockのレスポンスを取得
   def get_webhock_events(client, body)
     events = client.parse_events_from(body)
   end
 
+  # ユーザーのプロファイル情報を抽出
   def get_line_user_profile(client, events)
     response = client.get_profile(events[0]['source']['userId'])
+  end
+
+  # ユーザーがDBに存在するかチェック
+  def line_user_exist?(contact)
+    LineUser.exists?(user_id: contact['userId']) ? true : false
+  end
+
+  # ユーザーの登録
+  # TODO
+  # モデルに切り出す。self.exists?のようには書けないので、LineUserモデル内でLineUser.exists?のように書くしかないか。
+  def line_user_registration(contact)
+    line_user = LineUser.new
+
+    logger.debug("送信者情報の保存処理開始")
+    ActiveRecord::Base.transaction do
+      line_user.display_name = contact['displayName']
+      line_user.user_id = contact['userId']
+      line_user.language = contact['language']
+      line_user.picture_url = contact['pictureUrl']
+      line_user.status_message = contact['statusMessage']
+      line_user.save
+
+      line_bot = LineBot.new
+      line_bot.message_sender = contact['userId']
+      line_bot.save
+      logger.debug("送信者情報の保存処理成功")
+    end
   end
 end
