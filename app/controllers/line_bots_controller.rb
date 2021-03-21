@@ -8,9 +8,20 @@ class LineBotsController < ApplicationController
 
   ERROR_MESSAGE = {
     type: 'text',
-    text: '整数を入力してください。'
+    text: '交通費を整数で入力してください。'
   }
-  
+
+  SAVE_CONFIRMATION_MESSAGE = {
+    type: 'text',
+    text: "以前入力した交通費の情報が残っています。\n保存ならYes、取り消しならNoを入力してください。\nこの処理は3回繰り返すと、以前入力した交通費が取り消されます。"
+  }
+
+  DELETE_MESSAGE = {
+    type: 'text',
+    text: "以前入力した交通費を削除しました。"
+  }
+
+  # TODO: line_botsテーブルいる？
   def callback
     # Webhockからリクエストを受信する
     body = request.body.read
@@ -40,21 +51,44 @@ class LineBotsController < ApplicationController
       logger.debug("送信者情報保存済み")
     end
 
-    # TODO: 送信者の仮金額保存DBに金額があれば、YESかNOを入力するように求める
-    # 3回間違えると仮金額保存DBから削除する。
-    # たぶん、settlement_judgeカラムはいらいない。仮金額保存DBで何とかなると思う。実装が進み問題がないことが確認出来たら削除する。
-
-
     event = events[0]
-    line_bot = LineBot.new
-    if accept_transportation_expenses?(contact)
+    # 送信者の仮金額保存DBに金額があれば、YESかNOを入力するように求める
+    # たぶん、settlement_judgeカラムはいらいない。仮金額保存DBで何とかなると思う。実装が進み問題がないことが確認出来たら削除する。
+    tmp_expense = TmpTransportationExpense
+    line_user = LineUser.find_by(user_id: contact['userId'])
+    tmp_expense_exists = tmp_expense.find_by(line_users_id: line_user.id) 
+    logger.debug("tmp_expense_exists: #{tmp_expense_exists}")
+    unless tmp_expense_exists.nil?
+      logger.debug("仮DBはあるようだ")
+
+      line_bot = LineBot.new
       # 確認テンプレートでYesなら金額を保存
       if answer_yes?(event)
         reply_to_save_transportation_expenses(client, event)
-        save_transportation_expenses(line_bot)
+        save_transportation_expenses(line_bot, event, line_user.id)
+        logger.debug("仮金額を削除する。")
+        tmp_expense_exists.delete
+
+        return
       end
+
+      # 3回間違えると仮金額保存DBから削除する。
+      if tmp_expense_exists.availability_count > 2
+        tmp_expense_exists.delete
+        client.reply_message(event['replyToken'], DELETE_MESSAGE)
+
+        return
+      end
+
+      # ユーザーに仮金額は保存済みなので入力しなおさせる。
+      logger.debug("カウントを＋")
+      tmp_expense_exists.update(availability_count: tmp_expense_exists.availability_count += 1)
+      # YESかNOを入力してくれとリプライする。
+      client.reply_message(event['replyToken'], SAVE_CONFIRMATION_MESSAGE)
+
+      return
     end
-    
+
     # 金額受取、確認テンプレートを表示する
     if event_type_text?(event)
       logger.debug("確認テンプレート表示処理")
@@ -68,13 +102,12 @@ class LineBotsController < ApplicationController
 
       # 仮のDBに金額を保存する。
       tmp_te = TmpTransportationExpense.new
-
       if line_user_exist?(contact)
         line_user = LineUser.find_by(user_id: contact['userId'])
         logger.debug("line_user_id: #{line_user.id}")
         logger.debug("tmp_te: #{tmp_te.line_users_id }")
 
-        save_transportation_expenses_in_tmp_db(line_user)
+        save_transportation_expenses_in_tmp_db(line_user, event)
       end
     end
   end
@@ -134,10 +167,17 @@ class LineBotsController < ApplicationController
   end
 
   # 交通費をDBに保存
-  def save_transportation_expenses(line_bot)
+  # TODO: 仮金額から金額を移植するようにする。
+  def save_transportation_expenses(line_bot, event, line_user_id)
     logger.debug("交通費保存処理開始")
-    line_bot.received_message = event['message']['text'] # DBにYESかNOかを保存するようにしているが、何に使うのか不明、消すか？
-    line_bot.save
+    tmp_expense = TmpTransportationExpense
+    tmp_fee = tmp_expense.find_by(line_users_id: line_user_id)
+    transportation_expense = TransportationExpense.new
+    transportation_expense.line_users_id = line_user_id
+    transportation_expense.fee = tmp_fee.fee
+    transportation_expense.save
+    tmp_fee.delete
+
     logger.debug("交通費保存成功")
   end
 
@@ -188,7 +228,7 @@ class LineBotsController < ApplicationController
     logger.debug("確認テンプレート表示完了")
   end
 
-  
+  # 使わなくなる可能性あり。
   def flag_save(contact)
     ActiveRecord::Base.transaction do
       LineBot.find_by(message_sender: contact['userId']).update(settlement_judge: 'Y')
@@ -196,8 +236,11 @@ class LineBotsController < ApplicationController
   end
 
   # 交通費を一時DBに保存
-  def save_transportation_expenses_in_tmp_db(line_user)
+  # TODO: 一時的に交通費を保存するテーブルを作成したが、line_userテーブルのカラムで仮交通費を保存する方法でもいいかもしれない。
+  # どちらの方がいいのだろうか？
+  def save_transportation_expenses_in_tmp_db(line_user, event)
     # 外部キーへの保存がうまくいかないので直クエリを書いた。
-    res = ActiveRecord::Base.connection.execute("INSERT INTO `tmp_transportation_expenses` (`fee`, `line_users_id`, `created_at`, `updated_at`) VALUES (1, '#{line_user.id}', '2021-02-24 08:54:02.595447', '2021-02-24 08:54:02.595447')")   
+    fee = event['message']['text']
+    res = ActiveRecord::Base.connection.execute("INSERT INTO `tmp_transportation_expenses` (`fee`, `line_users_id`, `created_at`, `updated_at`) VALUES (#{fee}, '#{line_user.id}', '2021-02-24 08:54:02.595447', '2021-02-24 08:54:02.595447')")   
   end
 end
