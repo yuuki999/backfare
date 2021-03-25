@@ -18,7 +18,12 @@ class LineBotsController < ApplicationController
 
   DELETE_MESSAGE = {
     type: 'text',
-    text: "以前入力した交通費を削除しました。"
+    text: "3回間違えました。以前入力した交通費を削除しました。"
+  }
+
+  NO_MESSAGE = {
+    type: 'text',
+    text: "以前入力した交通費を取り消しました。"
   }
 
   # TODO: line_botsテーブルいる？
@@ -52,40 +57,42 @@ class LineBotsController < ApplicationController
     end
 
     event = events[0]
-    # 送信者の仮金額保存DBに金額があれば、YESかNOを入力するように求める
+    # 送信者の仮金額保存テーブルに金額があれば、YESかNOを入力するように求める
     # たぶん、settlement_judgeカラムはいらいない。仮金額保存DBで何とかなると思う。実装が進み問題がないことが確認出来たら削除する。
     tmp_expense = TmpTransportationExpense
-    line_user = LineUser.find_by(user_id: contact['userId'])
-    tmp_expense_exists = tmp_expense.find_by(line_users_id: line_user.id) 
-    logger.debug("tmp_expense_exists: #{tmp_expense_exists}")
-    unless tmp_expense_exists.nil?
+    line_user = get_line_user_info(contact)
+    tmp_expense_row = tmp_transportation_fee_exists?(tmp_expense, line_user)
+    unless tmp_expense_row.nil?
       logger.debug("仮DBはあるようだ")
 
       line_bot = LineBot.new
-      # 確認テンプレートでYesなら金額を保存
+      # 確認テンプレートでYesなら金額を保存。
+      # 仮交通費を削除する。
       if answer_yes?(event)
         reply_to_save_transportation_expenses(client, event)
         save_transportation_expenses(line_bot, event, line_user.id)
-        logger.debug("仮金額を削除する。")
-        tmp_expense_exists.delete
+        tmp_transportation_fee_delete(tmp_expense_row)
+        return
+      end
 
+      # 確認テンプレートでNoなら仮金額テーブルから削除する。
+      if answer_no?(event)
+        tmp_transportation_fee_delete(tmp_expense_row)
+        send_tmp_fee_delete_message(client, event)
         return
       end
 
       # 3回間違えると仮金額保存DBから削除する。
-      if tmp_expense_exists.availability_count > 2
-        tmp_expense_exists.delete
-        client.reply_message(event['replyToken'], DELETE_MESSAGE)
-
+      if tmp_expense_row.availability_count > 2
+        tmp_transportation_fee_delete(tmp_expense_row)
+        send_delete_message(client, event)
         return
       end
 
       # ユーザーに仮金額は保存済みなので入力しなおさせる。
-      logger.debug("カウントを＋")
-      tmp_expense_exists.update(availability_count: tmp_expense_exists.availability_count += 1)
+      increase_the_availability_count(tmp_expense_row)
       # YESかNOを入力してくれとリプライする。
-      client.reply_message(event['replyToken'], SAVE_CONFIRMATION_MESSAGE)
-
+      yes_or_no_answer(client, event)
       return
     end
 
@@ -156,8 +163,13 @@ class LineBotsController < ApplicationController
   end
 
   # 返答がYESか判断
+  # TODO: Yesは大文字、小文字の区別はしない、寛容に許可したい。
   def answer_yes?(event)
     event['message']['text'] == 'Yes' ? true : false
+  end
+
+  def answer_no?(event)
+    event['message']['text'] == 'No' ? true : false
   end
 
   # 交通費保存完了メッセージの送信
@@ -228,6 +240,11 @@ class LineBotsController < ApplicationController
     logger.debug("確認テンプレート表示完了")
   end
 
+  # 削除メッセージを送信。
+  def send_delete_message(client, event)
+    client.reply_message(event['replyToken'], DELETE_MESSAGE)
+  end
+
   # 使わなくなる可能性あり。
   def flag_save(contact)
     ActiveRecord::Base.transaction do
@@ -242,5 +259,34 @@ class LineBotsController < ApplicationController
     # 外部キーへの保存がうまくいかないので直クエリを書いた。
     fee = event['message']['text']
     res = ActiveRecord::Base.connection.execute("INSERT INTO `tmp_transportation_expenses` (`fee`, `line_users_id`, `created_at`, `updated_at`) VALUES (#{fee}, '#{line_user.id}', '2021-02-24 08:54:02.595447', '2021-02-24 08:54:02.595447')")   
+  end
+
+  # 登録済みのLineUserの情報を取得。
+  def get_line_user_info(contact)
+    LineUser.find_by(user_id: contact['userId'])
+  end
+
+  # 仮交通費が存在するか。
+  def tmp_transportation_fee_exists?(tmp_expense, line_user)
+    tmp_expense.find_by(line_users_id: line_user.id) 
+  end
+
+  # 仮交通費を削除。
+  def tmp_transportation_fee_delete(tmp_expense_row)
+    logger.debug("仮金額を削除開始")
+    tmp_expense_row.delete
+    logger.debug("仮金額を削完了")
+  end
+
+  def increase_the_availability_count(tmp_expense_row)
+    tmp_expense_row.update(availability_count: tmp_expense_row.availability_count += 1)
+  end
+
+  def yes_or_no_answer(client, event)
+    client.reply_message(event['replyToken'], SAVE_CONFIRMATION_MESSAGE)
+  end
+
+  def send_tmp_fee_delete_message(client, event)
+    client.reply_message(event['replyToken'], NO_MESSAGE)
   end
 end
