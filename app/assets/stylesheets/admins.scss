@@ -1,0 +1,88 @@
+// Place all the styles related to the admins controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+body{
+  font-family:"Yu Gothic Medium", "游ゴシック Medium", YuGothic, "游ゴシック体", "ヒラギノ角ゴ Pro W3", "メイリオ", sans-serif !important;
+}
+
+.wrapper{
+  width: 100vw;
+  height: 100vh;
+}
+.header{
+  width: calc(100% - 200px);
+  height: 100px;
+  background-color: red;
+  float: left;
+  margin-bottom: 20px;
+}
+.left-sidebar{
+  width: 200px;
+  height: 100%;
+  background-color: #66CCFF;
+  float: left;
+}
+.breadcrumb{
+  margin: 10px 30px;
+  height: 50px;
+  width: 400px;
+  background-color: blue;
+}
+.main{
+  width: calc(100% - 200px);
+  height: calc(100% - 100px);
+  // background-color: gray;
+  float: left;
+}
+.contents{
+  width: calc(100% - 120px);
+  height: 100%;
+  // background-color: yellow;
+  margin-right: auto;
+  margin-left: auto;
+}
+.content{
+  // background-color: silver;
+  height: 60px;
+  width: calc(100% - 10px);
+  margin: 0 5px;
+  position: relative;
+}
+.item{
+  height: 100%;
+  width: 100%;
+  // background-color:teal;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  // 子要素を上下中央にする。
+  display: flex;
+  align-items: center;
+}
+.transportation_expenses{
+  background-color:lime;
+  width: 1000px;
+  height: 50px;
+  // 子要素を上下中央にする。
+  display: flex;
+  align-items: center;
+}
+
+.logo_img{
+  width: 80p;
+  height: 80px;
+  margin: 30px;
+}
+
+.left-sidebar__content{
+  padding: 5px 0 5px 40px;
+  color: white;
+}
+
+.search{
+  margin: 10px 30px;
+}
