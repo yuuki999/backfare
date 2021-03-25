@@ -6,7 +6,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && mkdir /rails_base
 WORKDIR /rails_base
 COPY Gemfile /rails_base/Gemfile
-COPY Gemfile.lock /rails_base/Gemfile.lock
 COPY . /rails_base
 RUN bundle install
 
