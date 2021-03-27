@@ -1,0 +1,78 @@
+.login-wrapper{
+  width: 100vw;
+  height: 100vh;
+  background-color: #66CCFF;
+}
+.login-main{
+  width: 500px;
+  height: 800px;
+  // background-color: red;
+  margin: auto;
+  padding-top: 80px;
+}
+.login_service-name{
+  height: 100px;
+  width: 100%;
+  // background-color: green;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.login_service-name-str{
+  padding-top: 50px;
+}
+.login-form{
+  width: 100%;
+  height: 200px;
+  // background-color: chartreuse;
+}
+.login-form-input-area{
+  width: 100%;
+  height: 100%;
+  // background-color: chocolate;
+  padding: 20px;
+}
+.login-email{
+  width: 270px;
+  height: 45px;
+  background-color: #FFFFFF;
+  margin: 20px auto;
+  border-radius: 5px;
+}
+.login-passwd{
+  width: 270px;
+  height: 45px;
+  background-color: #FFFFFF;
+  margin: 20px auto;
+  border-radius: 5px;
+}
+.login-button{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+.login-button-area{
+  width: 270px;
+  height: 45px;
+  background-color: #FF6699;
+  margin: 30px auto;
+  border-radius: 5px;
+}
+.login-remember-passwd{
+  
+}
+
+.login-email-input{
+  width: 100%;
+  display: block;
+  padding: 10px 5px;
+  border-radius: 5px;
+}
+.login-passwd-input{
+  width: 90%;
+  display: block;
+  padding: 10px 5px;
+  border-radius: 5px;
+}
+
