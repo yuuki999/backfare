@@ -61,4 +61,7 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   # dockerコンテナを再起動しないと反映されない現象を解消
   config.file_watcher = ActiveSupport::FileUpdateChecker
+
+  # device
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
