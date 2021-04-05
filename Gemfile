@@ -32,6 +32,10 @@ gem 'dotenv-rails'
 gem 'bootstrap', '~> 5.0.0.beta2'
 gem 'jquery-rails'
 gem 'devise'
+gem 'react-rails'
+gem 'rack-cors'
+gem 'omniauth', '1.9.1'
+gem 'omniauth-line'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
