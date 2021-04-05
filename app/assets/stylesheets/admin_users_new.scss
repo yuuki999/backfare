@@ -75,4 +75,24 @@
   padding: 10px 5px;
   border-radius: 5px;
 }
+.sns-login-button-area{
+  // .login-button-areと同様
+  width: 270px;
+  height: 45px;
+  background-color: #000080;
+  margin: 30px auto;
+  border-radius: 5px;
+}
+.sns-login-button{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #FFFFFF;
+  font-weight: bold;
+  // 上下中央 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
 

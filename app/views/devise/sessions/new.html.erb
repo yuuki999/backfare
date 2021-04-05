@@ -19,14 +19,14 @@
       <div class='login-button-area'>
         <%= f.submit "ログイン", :class => 'login-button' %>
       </div>
+      <div class='sns-login-button-area'>
+        <%= link_to "LINEでログイン", admin_user_line_omniauth_authorize_path, :class => 'sns-login-button', method: :post %>
+      </div>
       <div class='login-remember-passwd'>
       </div>
     </div>
   <% end %>
 </div>
-
-
-
 
 <!--
 <h2>Log in</h2>
