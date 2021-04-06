@@ -8,34 +8,35 @@
       <%= image_tag 'admin/logo_test.svg', class: 'logo_img' %>
     </div>
     <div class='left-sidebar__contents'>
-      <div class='left-sidebar__content'>
-        トップ画面
-      </div>
-      <div class='left-sidebar__content'>
-        詳細画面
-      </div>
+      <div class='left-sidebar__content'>トップ画面</div>
+      <div class='left-sidebar__content'>詳細画面</div>
     </div>
   </div>
   <div class='header'>
-    <div class='search'>
-      <div class=''>検索ボックスが入る予定です。</div>
+    <div class='search-area'>
+      <%= form_for @logined_user, url: {action: "index"} do |f| %>
+        <!-- デザイン確認　テスト用-->
+        <%= f.text_field :email, value: '', :class => 'search-box', :placeholder =>"検索ボックス" %>
+      <% end %>
     </div>
-    <div class='breadcrumb'>
-      <div class=''>パンくずが入る予定です。。</div>
+    <div class='breadcrumb-area'>
+      <div class='breadcrumb'>
+        <div class='breadcrumb-item'>HOME</div>
+        <%= image_tag 'admin/left_icon.svg', class: 'left_icon' %>
+      </div>
     </div>
   </div>
   <div class='main'>
     <div class='contents'>
-      <div class='content'>
-        <div class='item'>
-          <div class='transportation_expenses'>2021-03</div>
+      <% @elapsed_months.reverse_each do |elapsed_month| %>
+        <div class='content'>
+          <div class='item'>
+            <div class='transportation_expenses'>
+              <%= link_to elapsed_month, "/admin/#{elapsed_month}" %> <!-- 動作するが違和感を感じる。-->
+            </div>
+          </div>
         </div>
-      </div>
-            <div class='content'>
-        <div class='item'>
-          <div class='transportation_expenses'>2021-03</div>
-        </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>

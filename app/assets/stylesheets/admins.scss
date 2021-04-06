@@ -12,10 +12,9 @@ body{
 }
 .header{
   width: calc(100% - 200px);
-  height: 100px;
-  background-color: red;
+  height: 130px;
+  border-bottom: solid 1px #C0C0C0;
   float: left;
-  margin-bottom: 20px;
 }
 .left-sidebar{
   width: 200px;
@@ -23,21 +22,33 @@ body{
   background-color: #66CCFF;
   float: left;
 }
-.breadcrumb{
-  margin: 10px 30px;
+.breadcrumb-area{
+  margin: 0 30px;
   height: 50px;
-  width: 400px;
-  background-color: blue;
+  width: 400px; 
+}
+.breadcrumb{
+  height: 100%;
+  width: 100%;
+  margin: 0 !important;
+}
+.breadcrumb-item{
+  margin: 15px 0; // 上下中央にできない。仕方なくmarginで調整。
+}
+.left_icon{
+  height: 13px;
+  width: 13px;
+  margin: 20px 10px; // 上下中央にできない。仕方なくmarginで調整。
 }
 .main{
   width: calc(100% - 200px);
-  height: calc(100% - 100px);
+  height: calc(100% - 130px);
   // background-color: gray;
   float: left;
+  overflow: scroll;
 }
 .contents{
   width: calc(100% - 120px);
-  height: 100%;
   // background-color: yellow;
   margin-right: auto;
   margin-left: auto;
@@ -46,7 +57,7 @@ body{
   // background-color: silver;
   height: 60px;
   width: calc(100% - 10px);
-  margin: 0 5px;
+  margin: 10px 5px;
   position: relative;
 }
 .item{
@@ -64,7 +75,7 @@ body{
   align-items: center;
 }
 .transportation_expenses{
-  background-color:lime;
+  // background-color:lime;
   width: 1000px;
   height: 50px;
   // 子要素を上下中央にする。
@@ -83,6 +94,15 @@ body{
   color: white;
 }
 
-.search{
-  margin: 10px 30px;
+.search-area{
+  height: 50px;
+  margin: 15px 30px 5px;
 }
+.search-box{
+  border: solid 1px #C0C0C0;
+  height: 45px;
+  width: 600px;
+  border-radius: 5px;
+}
+
+

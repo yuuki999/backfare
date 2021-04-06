@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'tests', to: 'tests#index'
   post 'line_bots', to: 'line_bots#callback'
   get 'admin', to: 'admins#index'
+  get '/admin/:id', to: 'admins#show'
 
   # どのパスにも一致しない場合。
   # TODO: 404 not found ページを用意する。
