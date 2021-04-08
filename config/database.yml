@@ -50,6 +50,6 @@ test:
 #
 production:
   <<: *default
-  database: rails_base_production
-  username: rails_base
-  password: <%= ENV['RAILS_BASE_DATABASE_PASSWORD'] %>
+  database: backfare_production
+  # username: rails_base
+  # password: <%= ENV['RAILS_BASE_DATABASE_PASSWORD'] %>
