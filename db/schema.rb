@@ -91,31 +91,6 @@ ActiveRecord::Schema.define(version: 2021_04_01_123353) do
     t.index ["line_users_id"], name: "index_transportation_expenses_on_line_users_id"
   end
 
-  create_table "user_auth_tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "provider", default: "email", null: false
-    t.string "uid", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.boolean "allow_password_change", default: false
-    t.datetime "remember_created_at"
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
-    t.string "name"
-    t.string "nickname"
-    t.string "image"
-    t.string "email"
-    t.text "tokens"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["confirmation_token"], name: "index_user_auth_tokens_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_user_auth_tokens_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_user_auth_tokens_on_reset_password_token", unique: true
-    t.index ["uid", "provider"], name: "index_user_auth_tokens_on_uid_and_provider", unique: true
-  end
-
   add_foreign_key "tmp_transportation_expenses", "line_users", column: "line_users_id"
   add_foreign_key "transportation_expenses", "line_users", column: "line_users_id"
 end
