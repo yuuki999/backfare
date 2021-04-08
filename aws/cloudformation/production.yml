@@ -23,6 +23,19 @@ Resources:
             Iops: 200
             DeleteOnTermination: false # インスタンス終了時にデータを削除しない。
             VolumeSize: 10 # GB
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          apt-get -y upgrade
+          apt-get -y update
+          apt-get -y install vim
+          apt-get -y install curl apt-transport-https ca-certificates software-properties-common
+          apt-get -y docker-compose
+          systemctl enable --now docker
+          usermod -aG docker ubuntu
+          wget -O /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.0/docker-compose-Linux-x86_64
+          chmod +x /usr/local/bin/docker-compose
+          mkdir -p /home/ubuntu/backfare
   EIP:
     Type: AWS::EC2::EIP
     Properties:

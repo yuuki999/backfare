@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   db:
     image: mysql:8.0
@@ -10,10 +10,11 @@ services:
     volumes:
       - mysql:/var/lib/mysql
   web:
-    build: .
-    command: bash -c "rm -f /rails_base/tmp/pids/server.pid && yarn install --check-files && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
     volumes:
-      - .:/rails_base
+      - ../:/backfare
     ports:
       - "3000:3000"
     depends_on:
