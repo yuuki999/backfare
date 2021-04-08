@@ -5,12 +5,11 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && apt-get install -y nodejs yarn \
     && apt-get install -y vim \
     && mkdir /rails_base
-WORKDIR /rails_base
-COPY Gemfile /rails_base/Gemfile
-COPY . /rails_base
+WORKDIR /backfare
+COPY ./ /backfare
 RUN bundle install
 
-COPY entrypoint.sh /usr/bin/
+COPY ./docker/entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
