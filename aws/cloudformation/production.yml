@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description:
+    production environment configuration
+Parameters:
+  Ec2KeyName: 
+    Description: Amazon EC2 Key Pair
+    Default: tes-production
+    Type: "AWS::EC2::KeyPair::KeyName"
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties: 
+      ImageId: "ami-059b6d3840b03d6dd" # ubuntu 20.04
+      InstanceType: t2.micro # 無料枠のはず
+      SecurityGroups:
+        - !Ref Ec2SecurityGroup
+      KeyName: !Ref Ec2KeyName
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: gp3 # 汎用SSD
+            Iops: 200
+            DeleteOnTermination: false # インスタンス終了時にデータを削除しない。
+            VolumeSize: 10 # GB
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Instance
+  Ec2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: production security group
+      GroupName: TesProductionSecurityGroup
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
