@@ -9,18 +9,37 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql:/var/lib/mysql
-  web:
+  app:
     build:
       context: ../
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/app/Dockerfile_app
     volumes:
-      - ../:/backfare
+      - ../:/var/www/backfare
+      - app_public:/var/www/backfare/public
+      - app_tmp:/var/www/backfare/tmp
     ports:
       - "3000:3000"
     depends_on:
       - db
     stdin_open: true
     tty: true
+  nginx:
+    build:
+      context: ../
+      dockerfile: ./docker/nginx/Dockerfile_nginx
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - app_public:/var/www/backfare/public
+      - app_tmp:/var/www/backfare/tmp
+    ports:
+      - 80:80
+      - 443:443
+    command: bash -c "/usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf" # フォアグランウドで起動しないとコンテナが終了する。
+    depends_on:
+      - app
 volumes:
   mysql:
     driver: local
+  # nginx + puma連携用の共有ディレクトリ
+  app_public:
+  app_tmp:

@@ -1,4 +1,4 @@
 version: '3.7'
 services:
-  web:
+  app:
     command: bash -c "rm -f /backfare/tmp/pids/server.pid && yarn install --check-files && bundle exec rails s -e production -p 3000 -b '0.0.0.0'"
