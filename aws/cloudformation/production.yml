@@ -17,12 +17,12 @@ Resources:
       KeyName: !Ref Ec2KeyName
       BlockDeviceMappings:
         -
-          DeviceName: /dev/sdm
+          DeviceName: /dev/sda1
           Ebs:
             VolumeType: gp3 # 汎用SSD
             Iops: 200
             DeleteOnTermination: false # インスタンス終了時にデータを削除しない。
-            VolumeSize: 10 # GB
+            VolumeSize: 20 # GB
       UserData:
         Fn::Base64: |
           #!/bin/bash
@@ -53,4 +53,9 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
+          CidrIp: 0.0.0.0/0
+        # nginxでリバースプロキシしたら削除するかも
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
           CidrIp: 0.0.0.0/0
