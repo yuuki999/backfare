@@ -16,9 +16,10 @@
           </div>
         </div>
       </div>
-      <div class='login-button-area'>
+      <!-- LINEログインのみで運用、様子見　-->
+      <%# <div class='login-button-area'>
         <%= f.submit "ログイン", :class => 'login-button' %>
-      </div>
+      <%# </div> %>
       <div class='sns-login-button-area'>
         <%= link_to "LINEでログイン", admin_user_line_omniauth_authorize_path, :class => 'sns-login-button', method: :post %>
       </div>

@@ -1,0 +1,2 @@
+class HowToUse < ApplicationRecord
+end
