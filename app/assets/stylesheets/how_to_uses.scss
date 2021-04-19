@@ -1,0 +1,77 @@
+// Place all the styles related to the HowToUses controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+.how-to-uses-main{
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden; // .how-to-uses-contentsでheight: 800px以上にすると横に少し幅が発生し、スクロールが発生してしまう。
+}
+.how-to-uses-header{
+  width: 100vw;
+  height: 100px;
+  background-color: #F0F0F0;
+}
+.how-to-uses-contents{
+  width: 100vw;
+  height: 2300px;
+}
+.how-to-uses-footer{
+  width: 100vw;
+  height: 300px;
+  background-color: #F0F0F0;
+}
+.how-to-uses-heading-message{
+  font-size: 36px;
+  margin: 0 auto;
+  width: 800px;
+  padding: 50px;
+  font-weight: bold;
+}
+.how-to-uses-content{
+  height: 2300px;
+  width: 1000px;
+  margin: 50px auto;
+}
+.how-to-uses-step{
+  height: 500px;
+  width: 100%;
+  padding: 25px;
+}
+.how-to-uses-left-content{
+  float: left;
+  width: 450px;
+  height: 100%;
+}
+.how-to-uses-right-content{
+  float: left;
+  width: 450px;
+  height: 100%;
+}
+.how-to-uses-left-content-header-message{
+  font-size: 22px;
+  font-weight: bold;
+}
+.how-to-uses-left-content-description{
+  font-size: 18px;
+}
+.how-to-uses-line_bot_qr_code{
+  height: 260px;
+  width: 260px;
+  margin: 20px 50px 0;
+}
+.line_bot_usecase_video-outer{
+  margin-top: 33px;
+  border-radius: 15px;
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+}
+.line_bot_usecase_video{
+  width: 400px;
+  height: 400px;
+}
+.line_login_img{
+  width: 800px;
+  height: 800px;
+  margin-right: 300px;
+}

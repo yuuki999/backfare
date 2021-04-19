@@ -31,7 +31,7 @@ module RailsBase
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-    config.hosts << "<ngrok ip>"
+    config.hosts << "backfare.net"
 
     config.autoload_paths << config.root.join("config/line_bot") 
   end

@@ -1,0 +1,48 @@
+<div class='how-to-uses-main'>
+  <div class='how-to-uses-header'></div>
+  <div class='how-to-uses-contents'>
+    <div class='how-to-uses-heading-message'>使い方は簡単。<br>煩わしい精算処理から解放されましょう!</div>
+    <div class='how-to-uses-content'>
+      <div class='how-to-uses-step'>
+        <div class='how-to-uses-left-content'>
+          <p class='how-to-uses-left-content-header-message'>1. LineBotを友達に追加する</p>
+          <p class='how-to-uses-left-content-description'>下記QRコードをLINEアプリから読み込んでください。</p>
+          <%= image_tag 'line_bot/line_bot_qr_code', class: 'how-to-uses-line_bot_qr_code' %>
+        </div>
+      </div>
+      <div class='how-to-uses-step'>
+        <div class='how-to-uses-left-content'>
+          <p class='how-to-uses-left-content-header-message'>2. 交通費を入力します。</p>
+        </div>
+        <div class='how-to-uses-right-content'>
+          <div class='line_bot_usecase_video-outer'>
+            <%= video_tag('line_bot/line_bot_usecase.mov', autoplay: true, muted: true, loop: true, class: 'line_bot_usecase_video') %>
+          </div>
+        </div>
+      </div>
+      <div class='how-to-uses-step'>
+        <div class='how-to-uses-left-content'>
+          <p class='how-to-uses-left-content-header-message'>3. 管理画面にログインします。</p>
+          <p class='how-to-uses-left-content-description'>下記URLからアクセスできます。<br>https://basefare/admin_users/sign_in</p>
+        </div>
+        <div class='how-to-uses-right-content'>
+        </div>
+      </div>
+      <div class='how-to-uses-step'>
+        <div class='how-to-uses-left-content'>
+          <p class='how-to-uses-left-content-header-message'>4. 月分の交通費を確認します</p>
+          <p class='how-to-uses-left-content-description'>ログイン後、管理画面からアクセスできます。</p>
+        </div>
+        <div class='how-to-uses-right-content'></div>
+      </div>
+      <!-- フェーズ2で実装　-->
+      <%# <div class='how-to-uses-step'>
+        <div class='how-to-uses-left-content'>
+          <p class='how-to-uses-left-content-header-message'>5. 形式を指定してDLすることも可能です。</p>
+        </div>
+        <div class='how-to-uses-right-content'>右側の説明です</div>
+      </div> %>
+    </div>
+  </div>
+  <div class='how-to-uses-footer'></div>
+</div>
