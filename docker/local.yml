@@ -2,3 +2,6 @@ version: '3.7'
 services:
   app:
     command: bash -c "rm -f /backfare/tmp/pids/server.pid && yarn install --check-files && bundle exec puma -C config/puma.rb"
+  nginx:
+    volumes:
+      - ./nginx/conf.d/local/:/etc/nginx/conf.d
