@@ -113,6 +113,7 @@ Rails.application.configure do
   # dockerコンテナを再起動しないと反映されない現象を解消
   config.file_watcher = ActiveSupport::FileUpdateChecker
 
-  # 本来は公開ドメインを指定するべきだが、仮置き
-  config.hosts << "localhost"
+  config.hosts << "backfare.net"
+  # line loginにてredirect uriがhttpになる問題を解消 
+  OmniAuth.config.full_host = "https://backfare.net"
 end
